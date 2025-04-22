@@ -1,0 +1,28 @@
+version: '3'
+services:
+  webapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/template  # 🔥 Ensure this correctly maps your project!
+    environment:
+      DJANGO_SETTINGS_MODULE: "template.settings"
+    ports:
+      - "8000:8000"
+      - "5678:5678" #Debug
+    depends_on:
+      - db
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: postgresdb
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: testpassword
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
